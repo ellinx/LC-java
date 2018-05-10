@@ -1,4 +1,4 @@
-package ellinx.solutions;
+package solutions;
 
 public class ListNode {
 	int val;

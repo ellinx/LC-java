@@ -1,4 +1,4 @@
-package ellinx.solutions;
+package solutions;
 
 /**
  * Find the length of the longest substring T of a given string (consists of

@@ -1,4 +1,4 @@
-package ellinx.solutions;
+package solutions;
 
 import java.util.HashSet;
 import java.util.Iterator;

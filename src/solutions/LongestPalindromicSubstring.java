@@ -1,4 +1,4 @@
-package ellinx.solutions;
+package solutions;
 
 /**
  * Given a string s, find the longest palindromic substring in s. You may assume

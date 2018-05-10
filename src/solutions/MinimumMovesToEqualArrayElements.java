@@ -1,4 +1,4 @@
-package ellinx.solutions;
+package solutions;
 
 import java.util.Arrays;
 

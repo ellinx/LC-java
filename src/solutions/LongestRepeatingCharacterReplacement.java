@@ -1,4 +1,4 @@
-package ellinx.solutions;
+package solutions;
 
 /**
  * Given a string that consists of only uppercase English letters, you can
