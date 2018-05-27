@@ -29,6 +29,7 @@ package solutions;
  */
 public class SerializeAndDeserializeBinaryTree {
 	// Encodes a tree to a single string.
+	// ==> root.val?root.left:root.right
     public String serialize(TreeNode root) {
         if (root==null)
             return "";
