@@ -3,7 +3,6 @@ package solutions;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -26,29 +25,20 @@ import java.util.Map;
  */
 public class GroupAnagrams {
 	public List<List<String>> groupAnagrams(String[] strs) {
-        List<List<String>> res = new ArrayList<>();
-        Map<String,List<String>> map = new HashMap<>();
-        for (String str : strs) {
+		Map<String, List<String>> map = new HashMap<>();
+        for (String str:strs) {
             char[] arr = str.toCharArray();
             Arrays.sort(arr);
-            String keyStr = new String(arr);
-            if (map.containsKey(keyStr)) {
-                List<String> tmp = map.get(keyStr);
-                tmp.add(str);
-                map.put(keyStr,tmp);
-            } else {
-                List<String> tmp = new ArrayList<>();
-                tmp.add(str);
-                map.put(keyStr,tmp);
-            }
+            String key = new String(arr);
+            if (!map.containsKey(key))
+                map.put(key, new ArrayList<String>());
+            map.get(key).add(str);
         }
-        
-        Iterator<List<String>> iter = map.values().iterator();
-        while (iter.hasNext()) {
-            List<String> tmp = iter.next();
-            res.add(tmp);
+        List<List<String>> ret = new ArrayList<>();
+        for (String k:map.keySet()) {
+            ret.add(map.get(k));
         }
-        return res;
+        return ret;
     }
 	
 	//test
@@ -64,11 +54,7 @@ public class GroupAnagrams {
 		};
 		List<List<String>> result = tmp.groupAnagrams(strs);
 		for (List<String> list:result) {
-			System.out.print("[");
-			for (String str:list) {
-				System.out.println(str+",");
-			}
-			System.out.println("]");
+			System.out.println(list);
 		}
 	}
 }
