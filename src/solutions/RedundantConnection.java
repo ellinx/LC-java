@@ -43,6 +43,7 @@ import java.util.Map;
  */
 public class RedundantConnection {
 	public int[] findRedundantConnection(int[][] edges) {
+		//union find
         Map<Integer,Integer> roots = new HashMap<>();
         int[] ret = {0,0};
         for (int[] edge:edges) {
