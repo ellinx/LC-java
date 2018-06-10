@@ -44,7 +44,6 @@ public class DeleteNodeInBST {
 	public TreeNode deleteNode(TreeNode root, int key) {
         if (root==null)
         	return null;
-        
         if (root.val < key){
         	root.right = deleteNode(root.right, key);
         } else if (root.val > key) {
@@ -62,7 +61,6 @@ public class DeleteNodeInBST {
         }
         return root;
     }
-
 	private TreeNode findMax(TreeNode root) {
 		if (root==null)
 			return null;
@@ -72,4 +70,59 @@ public class DeleteNodeInBST {
 		
 		return findMax(root.right);
 	}
+	
+	public TreeNode deleteNode2(TreeNode root, int key) {
+        if (root==null)
+            return null;
+        //step1:find the node
+        TreeNode parent = null;
+        TreeNode cur = root;
+        while (cur!=null && cur.val!=key) {
+            parent = cur;
+            if (cur.val>key) {
+                cur = cur.left;
+            } else {
+                cur = cur.right;
+            }
+        }
+        //step2:remove node
+        if (parent==null) {
+            return merge(root.left, root.right);
+        }
+        if (parent.left!=null && parent.left.val==key) {
+            parent.left = merge(parent.left.left, parent.left.right);
+        } else if (parent.right!=null && parent.right.val==key) {
+            parent.right = merge(parent.right.left, parent.right.right);
+        }
+        return root;
+    }
+    private TreeNode merge(TreeNode node1, TreeNode node2) {
+        //System.out.println(node1.val+","+node2.val);
+        if (node1==null && node2==null) {
+            return null;
+        }
+        if (node1!=null && node2==null) {
+            return node1;
+        }
+        if (node1==null && node2!=null) {
+            return node2;
+        }
+        TreeNode parent = node1;
+        TreeNode cur = node1.right;
+        while (cur!=null) {
+            parent = cur;
+            if (node2.val>cur.val) {
+                cur = cur.right;
+            } else {
+                cur = cur.left;
+            }
+        }
+        //System.out.println(parent.val+":"+node2.val);
+        if (parent.val<node2.val) {
+            parent.right = node2;
+        } else {
+            parent.left = node2;
+        }
+        return node1;
+    }
 }
