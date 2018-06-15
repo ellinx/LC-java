@@ -1,5 +1,8 @@
 package solutions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  * A self-dividing number is a number that is divisible by every digit it
