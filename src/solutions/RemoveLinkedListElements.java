@@ -11,38 +11,39 @@ package solutions;
  *
  */
 public class RemoveLinkedListElements {
-	public ListNode removeElements(ListNode head, int val) {
-        ListNode newHead = null;
-        if (head==null) return newHead;
-        ListNode pre = null;
-        ListNode cur = head;
-        
-        while (cur!=null) {
-        	if (newHead==null) {
-        		if (cur.val==val) {
-        			pre = cur;
-        			cur = cur.next;
-        		} else {
-        			newHead = cur;
-        			pre = cur;
-        			cur = cur.next;
-        		}
-        	} else {
-        		if (cur.val==val) {
-        			pre.next = cur.next;
-        			cur = cur.next;
-        		} else {
-        			pre = cur;
-        			cur = cur.next;
-        		}
-        	}
+	/**
+	 * Thoughts:
+	 * Go through whole list and remove node which has value val
+	 * 
+	 * Time: O(n) where n is length of list
+	 * Space: O(1)
+	 */
+    public ListNode removeElements(ListNode head, int val) {
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode cur = dummy;
+        while (cur.next!=null) {
+            if (cur.next.val==val) {
+                cur.next = cur.next.next;
+            } else {
+                cur = cur.next;
+            }
         }
-        return newHead;
+        return dummy.next;
     }
 	
 	//test
 	public static void main(String[] args) {
+		int[] arr = {1,2,6,3,4,5,6};
+		int val = 6;
 		RemoveLinkedListElements tmp = new RemoveLinkedListElements();
-		
+		ListNode dummy = new ListNode(0);
+		ListNode cur = dummy;
+		for (int num:arr) {
+			cur.next = new ListNode(num);
+			cur = cur.next;
+		}
+		tmp.removeElements(dummy.next, val);
+		System.out.println(dummy.next);
 	}
 }
