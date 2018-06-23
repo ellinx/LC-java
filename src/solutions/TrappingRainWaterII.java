@@ -24,6 +24,16 @@ import java.util.PriorityQueue;
  *
  */
 public class TrappingRainWaterII {
+	/**
+	 * Thoughts:
+	 * 1. push all boarder points to min heap
+	 * 2. start from minimum height point and check its neighbors(boarder are tighter and tighter)
+	 * 3. add unprocessed neighbors to min heap
+	 * 4. repeat 2 until all nodes are processed.
+	 * 
+	 * Time: O(mnlog(mn)) where m, n is total row and col number of matrix
+	 * Space: O(mn)
+	 */
     public int trapRainWater(int[][] heightMap) {
         int m = heightMap.length;
         if (m<3) {
