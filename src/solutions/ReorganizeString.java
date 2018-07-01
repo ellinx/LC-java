@@ -27,57 +27,43 @@ import java.util.PriorityQueue;
  *
  */
 public class ReorganizeString {
+	/**
+	 * Thoughts:
+	 * 1. count occurrence of each character in S
+	 * 2. put these characters in max heap
+	 * 3. each time pick head from the heap to construct new string, then put it aside to rest one round(a character apart)
+	 * 
+	 * Time: O(n*log(n)) where n is length of S
+	 * Space: O(n)
+	 */
     public String reorganizeString(String S) {
-        PriorityQueue<int[]> pq = new PriorityQueue<>(new Comparator<int[]>(){
-            @Override
+        int[] counter = new int[26];
+        for (char c:S.toCharArray()) {
+            counter[c-'a']++;
+        }
+        PriorityQueue<int[]> maxHeap = new PriorityQueue<>(new Comparator<int[]>(){
             public int compare(int[] a, int[] b) {
                 return b[1]-a[1];
             }
         });
-        
-        int[] count = new int[26];
-        for (int i=0;i<S.length();i++) {
-            count[S.charAt(i)-'a']++;
-        }
-        
-        for (int i=0;i<26;i++) {
-            if (count[i]>0) {
-                int[] arr = {i+'a', count[i]};
-                pq.offer(arr);
+        for (int i=0;i<counter.length;i++) {
+            if (counter[i]>0) {
+                maxHeap.offer(new int[]{i, counter[i]});
             }
         }
-        
+        int[] rest = {0,0};
         StringBuilder sb = new StringBuilder();
-        int[] arr = pq.poll();
-        sb.append((char)arr[0]);
-        char pre = (char)arr[0];
-        arr[1]--;
-        if (arr[1]!=0) {
-            pq.offer(arr);
+        while (!maxHeap.isEmpty()) {
+            int[] cur = maxHeap.poll();
+            sb.append((char)('a'+cur[0]));
+            cur[1]--;
+            if (rest[1]>0) {
+                maxHeap.offer(rest);
+            }
+            rest = cur;
         }
-        
-        while (!pq.isEmpty()) {
-            int[] arr1 = pq.poll();
-            if (arr1[0]==pre) {
-                int[] arr2 = pq.poll();
-                if (arr2==null)
-                    return "";
-                
-                sb.append((char)arr2[0]);
-                pre = (char)arr2[0];
-                arr2[1]--;
-                if (arr2[1]!=0) {
-                    pq.offer(arr2);
-                }
-                pq.offer(arr1);
-                continue;
-            }
-            sb.append((char)arr1[0]);
-            pre = (char)arr1[0];
-            arr1[1]--;
-            if (arr1[1]!=0) {
-                pq.offer(arr1);
-            }
+        if (rest[1]>0) {
+            return "";
         }
         return sb.toString();
     }
