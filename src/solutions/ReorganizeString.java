@@ -34,7 +34,7 @@ public class ReorganizeString {
 	 * 3. each time pick head from the heap to construct new string, then put it aside to rest one round(a character apart)
 	 * 
 	 * Time: O(n*log(n)) where n is length of S
-	 * Space: O(n)
+	 * Space: O(1)
 	 */
     public String reorganizeString(String S) {
         int[] counter = new int[26];
