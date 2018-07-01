@@ -28,10 +28,11 @@ import java.util.List;
  */
 public class BinaryTreeZigzagLevelOrderTraversal {
 	/**
-	 * BFS visited whole tree level by level and then reverse even level.
+	 * Thoughts:
+	 * 1.BFS visited whole tree level by level and then reverse even level.
 	 * 
-	 * @param root
-	 * @return
+	 * Time: O(n) where n is total number of nodes in the tree
+	 * Space: O(n)
 	 */
 	public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
         List<List<Integer>> ret = new ArrayList<>();
