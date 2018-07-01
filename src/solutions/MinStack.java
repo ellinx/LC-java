@@ -1,6 +1,5 @@
 package solutions;
 
-import java.util.PriorityQueue;
 import java.util.Stack;
 
 /**
@@ -26,31 +25,35 @@ import java.util.Stack;
  *
  */
 public class MinStack {
-	private Stack<Integer> stack;
-    private PriorityQueue<Integer> pq;
-
+    Stack<Integer> stkVals;
+    Stack<Integer> stkMins;
+    
     /** initialize your data structure here. */
     public MinStack() {
-        stack = new Stack<Integer>();
-        pq = new PriorityQueue<Integer>();
+        stkVals = new Stack<>();
+        stkMins = new Stack<>();
     }
     
     public void push(int x) {
-        stack.push(x);
-        pq.add(x);
+        stkVals.push(x);
+        if (stkMins.isEmpty() || x<=stkMins.peek()) {
+            stkMins.push(x);
+        }
     }
     
     public void pop() {
-        int value = stack.pop();
-        pq.remove(value);
+        int temp = stkVals.pop();
+        if (stkMins.peek()==temp) {
+            stkMins.pop();
+        }
     }
     
     public int top() {
-        return stack.peek();
+        return stkVals.peek();
     }
     
     public int getMin() {
-        return pq.peek();
+        return stkMins.peek();
     }
     
     /**
