@@ -1,16 +1,23 @@
 package solutions;
-
+/**
+ * You are a professional robber planning to rob houses along a street. 
+ * Each house has a certain amount of money stashed, the only constraint 
+ * stopping you from robbing each of them is that adjacent houses have 
+ * security system connected and it will automatically contact the police 
+ * if two adjacent houses were broken into on the same night.
+ * 
+ * Given a list of non-negative integers representing the amount of money 
+ * of each house, determine the maximum amount of money you can rob tonight 
+ * without alerting the police.
+ */
 public class HouseRobber {
 	/**
-	 * You are a professional robber planning to rob houses along a street. 
-	 * Each house has a certain amount of money stashed, the only constraint 
-	 * stopping you from robbing each of them is that adjacent houses have 
-	 * security system connected and it will automatically contact the police 
-	 * if two adjacent houses were broken into on the same night.
+	 * Thoughts:
+	 * 1. dp[i][0] is max money if not rob i 
+	 * 2. dp[i][1] is max money if rob i
 	 * 
-	 * Given a list of non-negative integers representing the amount of money 
-	 * of each house, determine the maximum amount of money you can rob tonight 
-	 * without alerting the police.
+	 * Time: O(n) where n is length of nums
+	 * Space: O(n)
 	 */
 	public int rob(int[] nums) {
         int n = nums.length;
@@ -25,8 +32,6 @@ public class HouseRobber {
         }
         return Math.max(dp[n-1][0], dp[n-1][1]);
     }
-	
-	
 	
 	//test
 	public static void main(String[] args) {
