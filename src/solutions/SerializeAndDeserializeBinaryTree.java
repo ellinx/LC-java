@@ -28,36 +28,45 @@ package solutions;
  *
  */
 public class SerializeAndDeserializeBinaryTree {
-	// Encodes a tree to a single string.
-	// ==> root.val?root.left:root.right
+	/**
+	 * Thoughts:
+	 * 1. preorder serualize
+	 * 
+	 * Time: O(n) where n is total number of nodes in the tree
+	 * Space: O(n)
+	 */
+    // Encodes a tree to a single string.
     public String serialize(TreeNode root) {
-        if (root==null)
-            return "";
-        return root.val+"?"+serialize(root.left)+":"+serialize(root.right);
+        if (root==null) {
+            return "#";
+        }
+        return Integer.toString(root.val)+","+serialize(root.left)+","+serialize(root.right);
     }
 
     // Decodes your encoded data to tree.
     public TreeNode deserialize(String data) {
-        if (data.length()==0)
-            return null;
-        int index1 = data.indexOf("?");
-        if (index1==-1)
-            return new TreeNode(Integer.parseInt(data));
-        int left = 0;
-        int index2 = index1+1;
-        while (index2<data.length()) {
-            if (data.charAt(index2)=='?')
-                left++;
-            if (data.charAt(index2)==':') {
-                if (left==0)
-                    break;
-                left--;
+        int[] start = {0};
+        return helper(data, start);
+    }
+
+    private TreeNode helper(String s, int[] start) {
+        int end = s.indexOf(',',start[0]);
+        if (end==-1) {
+            String valStr = s.substring(start[0]);
+            if (valStr.equals("#")) {
+                return null;
             }
-            index2++;
+            return new TreeNode(Integer.parseInt(valStr));
         }
-        TreeNode ret = new TreeNode(Integer.parseInt(data.substring(0,index1)));
-        ret.left = deserialize(data.substring(index1+1,index2));
-        ret.right = deserialize(data.substring(index2+1));
+        String valStr = s.substring(start[0],end);
+        if (valStr.equals("#")) {
+            start[0] = end+1;
+            return null;
+        }
+        start[0] = end+1;
+        TreeNode ret = new TreeNode(Integer.parseInt(valStr));
+        ret.left = helper(s, start);
+        ret.right = helper(s, start);
         return ret;
     }
     
