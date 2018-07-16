@@ -54,24 +54,24 @@ import java.util.Stack;
  *
  */
 public class ExclusiveTimeOfFunctions {
-	public int[] exclusiveTime(int n, List<String> logs) {
-        int[] res = new int[n];
-        int preTime = 0;
-        Stack<Integer> stack = new Stack<>();
-        for (String each:logs) {
-            String[] log = each.split(":");
-            if (log[1].equals("start")) {
-                if (!stack.isEmpty())
-                    res[stack.peek()] += Integer.parseInt(log[2])-preTime;
-                
-                stack.push(Integer.parseInt(log[0]));
-                preTime = Integer.parseInt(log[2]);
-            } else if (log[1].equals("end")) {
-                res[stack.pop()] += Integer.parseInt(log[2])-preTime+1;
-                preTime = Integer.parseInt(log[2])+1;
+    public int[] exclusiveTime(int n, List<String> logs) {
+        int[] ret = new int[n];
+        Stack<Integer> stk = new Stack<>();
+        int cur = 0;
+        for (String log:logs) {
+            String[] strs = log.split(":");
+            if (strs[1].equals("start")) {
+                if (!stk.isEmpty()) {
+                    ret[stk.peek()] += Integer.parseInt(strs[2])-cur;
+                }
+                stk.push(Integer.parseInt(strs[0]));
+                cur = Integer.parseInt(strs[2]);
+            } else {
+                ret[stk.pop()] += Integer.parseInt(strs[2])+1-cur;
+                cur = Integer.parseInt(strs[2])+1;
             }
         }
-        return res;
+        return ret;
     }
 	
 	//test
