@@ -1,8 +1,5 @@
 package solutions;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * 
  * In this problem, a tree is an undirected graph that is connected and has no cycles.
@@ -42,29 +39,29 @@ import java.util.Map;
  *
  */
 public class RedundantConnection {
-	public int[] findRedundantConnection(int[][] edges) {
-		//union find
-        Map<Integer,Integer> roots = new HashMap<>();
-        int[] ret = {0,0};
+    public int[] findRedundantConnection(int[][] edges) {
+        int N = edges.length;
+        int[] ret = null;
+        int[] roots = new int[N+1];
+        for (int i=1;i<=N;i++) {
+            roots[i] = i;
+        }
         for (int[] edge:edges) {
-            if (!roots.containsKey(edge[0]))
-                roots.put(edge[0], edge[0]);
-            int root0 = findRoot(roots, edge[0]);
-            if (!roots.containsKey(edge[1]))
-                roots.put(edge[1], edge[1]);
-            int root1 = findRoot(roots, edge[1]);
-            if (root0==root1) {
+            int root1 = findRoot(roots, edge[0]);
+            int root2 = findRoot(roots, edge[1]);
+            if (root1==root2) {
                 ret = edge;
                 break;
             }
-            roots.put(root0, root1);
+            roots[root1] = root2;
         }
         return ret;
     }
     
-    private int findRoot(Map<Integer,Integer> roots, int node) {
-        while (node!=roots.get(node))
-            node = roots.get(node);
+    private int findRoot(int[] roots, int node) {
+        while (roots[node]!=node) {
+            node = roots[node];
+        }
         return node;
     }
 }
