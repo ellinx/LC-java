@@ -1,9 +1,5 @@
 package solutions;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 /**
  * Given a singly linked list, return a random node's value from the linked
  * list. Each node must have the same probability of being chosen.
@@ -24,16 +20,6 @@ import java.util.Random;
  *
  */
 
-
-/**
- * Definition for singly-linked list.
- * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode(int x) { val = x; }
- * }
- */
-
 //Reservoir Sampling
 //Problem:
 //Choose k entries from n numbers. Make sure each number is selected with the probability of k/n
@@ -42,29 +28,39 @@ import java.util.Random;
 //For k+1, pick it with a probability of k/(k+1), and randomly replace a number in the reservoir.
 //For k+i, pick it with a probability of k/(k+i), and randomly replace a number in the reservoir.
 //Repeat until k+i reaches n
-public class LinkedListRandomNode {
-	private ListNode m_head;
-	/** @param head The linked list's head.
-    Note that the head is guaranteed to be not null, so it contains at least one node. */
-	public LinkedListRandomNode(ListNode head) {
-	    m_head = head;
-	}
-	
-	/** Returns a random node's value. */
-	public int getRandom() {
-		ListNode cur = m_head;
-		int res = cur.val;
-		int i=1;
-		while (cur.next!=null) {
-			Random rand = new Random();
-		    int random = rand.nextInt(i+1);
-		    res = (random==i)?cur.next.val:res;
-		    i++;
-		    cur = cur.next;
-		}
-	    return res;
-	}
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class LinkedListRandomNode {
+    
+    private ListNode head;
 
+    /** @param head The linked list's head.
+        Note that the head is guaranteed to be not null, so it contains at least one node. */
+    public LinkedListRandomNode(ListNode head) {
+        this.head = head;
+    }
+    
+    /** Returns a random node's value. */
+    public int getRandom() {
+        int ret = 0;
+        ListNode cur = head;
+        for (int i=0;;i++) {
+            if (cur==null) {
+                break;
+            }
+            if ((int)(Math.random()*(i+1))==i) {
+                ret = cur.val;
+            }
+            cur = cur.next;
+        }
+        return ret;
+    }
 }
 
 /**
