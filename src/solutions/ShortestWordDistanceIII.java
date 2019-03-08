@@ -1,10 +1,5 @@
 package solutions;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * 
  * Given a list of words and two words word1 and word2, return the shortest
@@ -27,49 +22,23 @@ import java.util.Map;
  *
  */
 public class ShortestWordDistanceIII {
-	public int shortestWordDistance(String[] words, String word1, String word2) {
-        int ret = words.length;
-        Map<String, List<Integer>> map = new HashMap<>();
+    public int shortestWordDistance(String[] words, String word1, String word2) {
+        int pre1 = -words.length;
+        int pre2 = -words.length;
+        int ret = Integer.MAX_VALUE;
         for (int i=0;i<words.length;i++) {
-            if (!map.containsKey(words[i]))
-                map.put(words[i], new ArrayList<Integer>());
-            map.get(words[i]).add(i);
-        }
-        if (word1.equals(word2)) {
-            List<Integer> list = map.get(word1);
-            int pre = -1;
-            for (int each:list) {
-                if (pre==-1) {
-                    pre = each;
-                    continue;
+            if (word1.equals(words[i])) {
+                if (i!=pre2) {
+                    ret = Math.min(ret, i-pre2);
                 }
-                ret = Math.min(ret, each-pre);
-                pre = each;
+                pre1 = i;
             }
-            return ret;
-        }
-        List<Integer> l1 = map.get(word1);
-        List<Integer> l2 = map.get(word2);
-        int[] pre = {-1,-1};
-        int i1=0,i2=0;
-        while (i1<l1.size() && i2<l2.size()) {
-            if (l1.get(i1)<l2.get(i2)) {
-                if (pre[0]!=-1 && pre[0]==2) {
-                    ret = Math.min(ret, l1.get(i1)-pre[1]);
+            if (word2.equals(words[i])) {
+                if (i!=pre1) {
+                    ret = Math.min(ret, i-pre1);
                 }
-                pre = new int[]{1, l1.get(i1++)};
-            } else {
-                if (pre[0]!=-1 && pre[0]==1) {
-                    ret = Math.min(ret, l2.get(i2)-pre[1]);
-                }
-                pre = new int[]{2, l2.get(i2++)};
+                pre2 = i;
             }
-        }
-        if (i1<l1.size()) {
-            ret = Math.min(ret, l1.get(i1)-pre[1]);
-        }
-        if (i2<l2.size()) {
-            ret = Math.min(ret, l2.get(i2)-pre[1]);
         }
         return ret;
     }
