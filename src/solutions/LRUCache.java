@@ -33,82 +33,75 @@ import java.util.Map;
  *
  */
 
+class DNode {
+    public int key;
+    public int val;
+    public DNode prev;
+    public DNode next;
+    
+    public DNode(int k, int v) {
+        key = k;
+        val = v;
+        prev = null;
+        next = null;
+    }
+}
+
 public class LRUCache {
-	private int capacity;
-	private int size;
-	private Node head;
-	private Node tail;
-	private Map<Integer, Node> map;
-	
-	class Node {
-		Node prev;
-		Node next;
-		int key;
-		int value;
-		
-		public Node(int key, int value) {
-			this.key = key;
-			this.value = value;
-			prev = null;
-			next = null;
-		}
-	}
-	
-	public LRUCache(int capacity) {
-		this.capacity = capacity;
-		this.size = 0;
-        this.head = new Node(-1,-1);
-        this.tail = new Node(-1,-1);
+    private Map<Integer,DNode> map;
+    private DNode head, tail;
+    private int size;
+    private int cap;
+
+    public LRUCache(int capacity) {
+        map = new HashMap<>();
+        head = new DNode(0,0);
+        tail = new DNode(0,0);
         head.next = tail;
         tail.prev = head;
-        map = new HashMap<Integer, Node>();
+        size = 0;
+        cap = capacity;
     }
     
     public int get(int key) {
         if (!map.containsKey(key)) {
-        	return -1;
+            return -1;
         }
-        
-        Node node = map.get(key);
-        //remove this node
-        node.prev.next = node.next;
-        node.next.prev = node.prev;
-        //add this node to first
-		node.prev = head;
-		node.next = head.next;
-		head.next = node;
-		node.next.prev = node;
-        return node.value;
+        DNode node = map.get(key);
+        remove(node);
+        append(node);
+        return node.val;
+    }
+    private void remove(DNode node) {
+        DNode p1 = node.prev, p2 = node.next;
+        p1.next = p2;
+        p2.prev= p1;
+    }
+    private void append(DNode node) {
+        DNode p1 = tail.prev, p2 = tail;
+        p1.next = node;
+        node.prev = p1;
+        node.next = p2;
+        p2.prev = node;
     }
     
     public void put(int key, int value) {
-    	Node node = new Node(key, value);
-        if (!map.containsKey(key)) {
-        	//add this node to first
-    		node.prev = head;
-    		node.next = head.next;
-    		head.next = node;
-    		node.next.prev = node;
-        	map.put(key, node);
-        	this.size++;
-        	if (this.size > this.capacity) {
-        		Node lastNode = tail.prev;
-        		//remove this node
-        		lastNode.prev.next = lastNode.next;
-        		lastNode.next.prev = lastNode.prev;
-        		map.remove(lastNode.key);
-        	}
+        if (map.containsKey(key)) {
+            DNode node = map.get(key);
+            node.val = value;
+            remove(node);
+            append(node);
         } else {
-        	Node oldNode = map.get(key);
-            //remove old node
-        	oldNode.prev.next = oldNode.next;
-        	oldNode.next.prev = oldNode.prev;
-        	//add new node
-        	node.prev = head;
-    		node.next = head.next;
-    		head.next = node;
-    		node.next.prev = node;
-        	map.put(key, node);
+            DNode node = new DNode(key,value);
+            map.put(key, node);
+            append(node);
+            size++;
+        }
+        if (size>cap) {
+            DNode node = head.next;
+            remove(node);
+            map.remove(node.key);
+            size--;
         }
     }
     
