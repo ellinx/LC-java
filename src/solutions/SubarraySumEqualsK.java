@@ -18,25 +18,17 @@ import java.util.Map;
  *
  */
 public class SubarraySumEqualsK {
-	public int subarraySum(int[] nums, int k) {
-        int res = 0;
-        int sum = 0;
-        Map<Integer, Integer> map = new HashMap<>();
-        for (int i=0;i<nums.length;i++) {
-            sum += nums[i];
-            if (map.containsKey(sum-k)) {
-                res += map.get(sum-k);
-            }
-            
-            if (map.containsKey(sum)) {
-                map.put(sum, map.get(sum)+1);
-            } else {
-                map.put(sum, 1);
-            }
-            //System.out.println("sum="+sum+",res="+res);
+    public int subarraySum(int[] nums, int k) {
+        Map<Integer,Integer> counter = new HashMap<>();
+        counter.put(0,1);
+        int total = 0;
+        int ret = 0;
+        for (int num:nums) {
+            total += num;
+            ret += counter.getOrDefault(total-k, 0);
+            counter.put(total, counter.getOrDefault(total,0)+1);
         }
-        res += (map.containsKey(k))?map.get(k):0;
-        return res;
+        return ret;
     }
 	
 	//test
