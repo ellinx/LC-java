@@ -17,31 +17,34 @@ package solutions;
  */
 public class AddStrings {
     public String addStrings(String num1, String num2) {
-        String rnum1 = new StringBuilder(num1).reverse().toString();
-        String rnum2 = new StringBuilder(num2).reverse().toString();
         StringBuilder sb = new StringBuilder();
-        int index = 0;
+        int idx1=num1.length()-1, idx2=num2.length()-1;
         int carry = 0;
-        while (index<Math.min(rnum1.length(),rnum2.length())) {
-            int sum = rnum1.charAt(index)-'0'+rnum2.charAt(index)-'0'+carry;
-            sb.append(sum%10);
+        while (idx1>=0 && idx2>=0) {
+            int a = num1.charAt(idx1)-'0';
+            int b = num2.charAt(idx2)-'0';
+            int sum = a+b+carry;
+            sb.append((sum%10)+"");
             carry = sum/10;
-            index++;
+            idx1--;
+            idx2--;
         }
-        while (index<rnum1.length()) {
-            int sum = rnum1.charAt(index)-'0'+carry;
-            sb.append(sum%10);
+        while (idx1>=0) {
+            int a = num1.charAt(idx1)-'0';
+            int sum = a+carry;
+            sb.append((sum%10)+"");
             carry = sum/10;
-            index++;
+            idx1--;
         }
-        while (index<rnum2.length()) {
-            int sum = rnum2.charAt(index)-'0'+carry;
-            sb.append(sum%10);
+        while (idx2>=0) {
+            int b = num2.charAt(idx2)-'0';
+            int sum = b+carry;
+            sb.append((sum%10)+"");
             carry = sum/10;
-            index++;
+            idx2--;
         }
         if (carry>0) {
-            sb.append(carry);
+            sb.append(carry+"");
         }
         return sb.reverse().toString();
     }
