@@ -1,0 +1,68 @@
+package solutions;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+In an alien language, surprisingly they also use english lowercase letters, 
+but possibly in a different order. The order of the alphabet is some permutation of lowercase letters.
+
+Given a sequence of words written in the alien language, and the order of the alphabet, 
+return true if and only if the given words are sorted lexicographicaly in this alien language.
+
+
+Example 1:
+Input: words = ["hello","leetcode"], order = "hlabcdefgijkmnopqrstuvwxyz"
+Output: true
+Explanation: As 'h' comes before 'l' in this language, then the sequence is sorted.
+
+Example 2:
+Input: words = ["word","world","row"], order = "worldabcefghijkmnpqstuvxyz"
+Output: false
+Explanation: As 'd' comes after 'l' in this language, then words[0] > words[1], hence the sequence is unsorted.
+
+Example 3:
+Input: words = ["apple","app"], order = "abcdefghijklmnopqrstuvwxyz"
+Output: false
+Explanation: The first three characters "app" match, and the second string is shorter (in size.) 
+	According to lexicographical rules "apple" > "app", because 'l' > '∅', 
+	where '∅' is defined as the blank character which is less than any other character (More info).
+ 
+
+Note:
+1. 1 <= words.length <= 100
+2. 1 <= words[i].length <= 20
+3. order.length == 26
+4. All characters in words[i] and order are english lowercase letters.
+ */
+
+public class VerifyingAnAlienDictionary {
+    public boolean isAlienSorted(String[] words, String order) {
+        Map<Character,Integer> map = new HashMap<>();
+        for (int i=0;i<order.length();i++) {
+            map.put(order.charAt(i), i);
+        }
+        for (int i=0;i<words.length-1;i++) {
+            if (!check(words[i],words[i+1],map)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    private boolean check(String s1, String s2, Map<Character,Integer> map) {
+        int idx = 0;
+        while (idx<Math.min(s1.length(), s2.length())) {
+            if (map.get(s1.charAt(idx))==map.get(s2.charAt(idx))) {
+                idx++;
+            } else if (map.get(s1.charAt(idx))>map.get(s2.charAt(idx))) {
+                return false;
+            } else {
+                return true;
+            } 
+        }
+        if (idx==s1.length()) {
+            return true;
+        }
+        return false;
+    }
+}
