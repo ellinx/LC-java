@@ -44,34 +44,31 @@ import java.util.Stack;
  *
  */
 public class ValidParentheses {
-	public boolean isValid(String s) {
-		Stack<Character> stk = new Stack<>();
-		for (char c : s.toCharArray()) {
-			if (c == '(' || c == '[' || c == '{') {
-				stk.push(c);
-			} else if (c == ')') {
-				if (stk.isEmpty()) {
-					return false;
-				}
-				if (stk.pop() != '(') {
-					return false;
-				}
-			} else if (c == ']') {
-				if (stk.isEmpty()) {
-					return false;
-				}
-				if (stk.pop() != '[') {
-					return false;
-				}
-			} else if (c == '}') {
-				if (stk.isEmpty()) {
-					return false;
-				}
-				if (stk.pop() != '{') {
-					return false;
-				}
-			}
-		}
-		return stk.size() == 0;
-	}
+    public boolean isValid(String s) {
+        Stack<Character> stk = new Stack<>();
+        for (char c:s.toCharArray()) {
+            if (c=='(' || c=='[' || c=='{') {
+                stk.push(c);
+            } else if (c==')') {
+                if (!stk.empty() && stk.peek()=='(') {
+                    stk.pop();
+                } else {
+                    return false;
+                }
+            } else if (c==']') {
+                if (!stk.empty() && stk.peek()=='[') {
+                    stk.pop();
+                } else {
+                    return false;
+                }
+            } else if (c=='}') {
+                if (!stk.empty() && stk.peek()=='{') {
+                    stk.pop();
+                } else {
+                    return false;
+                }
+            }
+        }
+        return stk.empty();
+    }
 }
