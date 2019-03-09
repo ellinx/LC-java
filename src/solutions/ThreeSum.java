@@ -26,38 +26,35 @@ import java.util.List;
  */
 public class ThreeSum {
     public List<List<Integer>> threeSum(int[] nums) {
-        List<List<Integer>> ret = new ArrayList<List<Integer>>();
+        List<List<Integer>> ret = new ArrayList<>();
         Arrays.sort(nums);
-        for (int i=0;i<nums.length-2;i++) {
-            if (nums[i]>0) {
+        int n = nums.length;
+        for (int i=0;i<n-2;i++) {
+            if (nums[i]+nums[i+1]+nums[i+2]>0) {
                 break;
             }
             if (i>0 && nums[i-1]==nums[i]) {
                 continue;
             }
-            int l = i+1;
-            int r = nums.length-1;
-            if (nums[i]+nums[l]+nums[l+1]>0) {
-                break;
-            }
-            if (nums[i]+nums[r-1]+nums[r]<0) {
+            if (nums[i]+nums[n-2]+nums[n-1]<0) {
                 continue;
             }
-            while (l<r) {
-                if (nums[i]+nums[l]+nums[r]==0) {
-                    ret.add(Arrays.asList(new Integer[]{nums[i], nums[l], nums[r]}));
-                    l++;
-                    while (l<r && nums[l-1]==nums[l]) {
-                        l++;
+            int j=i+1, k=n-1;
+            while (j<k) {
+                if (nums[i]+nums[j]+nums[k]==0) {
+                    ret.add(Arrays.asList(nums[i],nums[j],nums[k]));
+                    j++;
+                    while (j<k && nums[j-1]==nums[j]) {
+                        j++;
                     }
-                    r--;
-                    while (l<r && nums[r]==nums[r+1]) {
-                        r--;
+                    k--;
+                    while (k>j && nums[k]==nums[k+1]) {
+                        k--;
                     }
-                } else if (nums[i]+nums[l]+nums[r]>0) {
-                    r--;
+                } else if (nums[i]+nums[j]+nums[k]>0) {
+                    k--;
                 } else {
-                    l++;
+                    j++;
                 }
             }
         }
