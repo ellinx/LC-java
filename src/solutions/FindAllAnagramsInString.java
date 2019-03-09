@@ -1,7 +1,9 @@
 package solutions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Given a string s and a non-empty string p, find all the start indices of p's
@@ -33,51 +35,40 @@ import java.util.List;
  *
  */
 public class FindAllAnagramsInString {
-	public List<Integer> findAnagrams(String s, String p) {
-		List<Integer> res = new ArrayList<>();
-        if (s==null || s.length()<p.length()) return res;
-        
-        int[] letters = new int[26];
-        int count = 0;
-        for (int i=0;i<p.length();i++) {
-        	char a = p.charAt(i);
-        	if (letters[a-'a']==0) {
-        		count++;
-        	}
-        	letters[a-'a']++;
+    public List<Integer> findAnagrams(String s, String p) {
+        Map<Character,Integer> counter = new HashMap<>();
+        for (char c:p.toCharArray()) {
+            counter.put(c, counter.getOrDefault(c,0)+1);
         }
-        
-        int start = 0;
-        int end = 0;
-        while (end<p.length()) {
-        	char a = s.charAt(end);
-        	if (letters[a-'a']==1) {
-        		count--;
-        	}
-        	letters[a-'a']--;
-        	end++;
+        int total = p.length();
+        List<Integer> ret = new ArrayList<>();
+        int l=0, r=0;
+        while (r<s.length()) {
+            if (!counter.containsKey(s.charAt(r))) {
+                r++;
+                continue;
+            }
+            if (counter.get(s.charAt(r))>0) {
+                total--;
+            }
+            counter.put(s.charAt(r), counter.get(s.charAt(r))-1);
+            r++;
+            while (total==0) {
+                if (r-l==p.length()) {
+                    ret.add(l);
+                }
+                if (!counter.containsKey(s.charAt(l))) {
+                    l++;
+                    continue;
+                }
+                if (counter.get(s.charAt(l))>=0) {
+                    total++;
+                }
+                counter.put(s.charAt(l), counter.get(s.charAt(l))+1);
+                l++;
+            }
         }
-        end--;
-        while (end<s.length()) {
-        	if (count==0) {
-        		res.add(start);
-        	}
-        	
-        	char a = s.charAt(start);
-        	if (letters[a-'a']==0) {
-        		count++;
-        	}
-        	letters[a-'a']++;
-        	start++;
-        	end++;
-        	if (end==s.length()) break;
-        	a = s.charAt(end);
-        	if (letters[a-'a']==1) {
-        		count--;
-        	}
-        	letters[a-'a']--;
-        }
-        return res;
+        return ret;
     }
 	
 	//test
