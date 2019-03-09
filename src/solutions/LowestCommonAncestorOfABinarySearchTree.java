@@ -36,24 +36,35 @@ package solutions;
  * All of the nodes' values will be unique.
  * p and q are different and both values will exist in the BST.
  * 
- * 
- * @author Ellinx
- *
+ */
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
  */
 public class LowestCommonAncestorOfABinarySearchTree {
-	public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
         if (p.val>q.val) {
             return lowestCommonAncestor(root, q, p);
         }
-        if (root==p || root==q) {
-            return root;
+        TreeNode cur = root;
+        while (cur!=p && cur!=q) {
+            if (cur==p || cur==q || (cur.val>p.val && cur.val<q.val)) {
+                break;
+            }
+            if (cur.val<p.val) {
+                cur = cur.right;
+                continue;
+            }
+            if (cur.val>q.val) {
+                cur = cur.left;
+            }
         }
-        if (root.val<p.val) {
-            return lowestCommonAncestor(root.right,p,q);
-        }
-        if (root.val>q.val) {
-            return lowestCommonAncestor(root.left,p,q);
-        }
-        return root;
+        return cur;
     }
 }
