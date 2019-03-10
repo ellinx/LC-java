@@ -43,12 +43,12 @@ public class FirstBadVersion {
     
     //test
     boolean isBadVersion(int num) {
-    	return num==4;
+    	return num>=4;
     }
     
     public static void main(String[] args) {
     	FirstBadVersion fbv = new FirstBadVersion();
-    	int result = fbv.firstBadVersion(5);
+    	int result = fbv.firstBadVersion(25);
     	System.out.println("result is "+result);
 	}
 }
