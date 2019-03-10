@@ -3,32 +3,56 @@ package solutions;
 import java.util.Stack;
 
 /**
- * 
- * Given an absolute path for a file (Unix-style), simplify it.
- * 
- * For example, 
- * path = "/home/", => "/home" 
- * path = "/a/./b/../../c/", => "/c"
- * 
- * Corner Cases:
- * 
- * Did you consider the case where path = "/../"? 
- * In this case, you should return "/". 
- * Another corner case is the path might contain multiple slashes '/' together, 
- * such as "/home//foo/". 
- * In this case, you should ignore redundant slashes and return "/home/foo".
- * 
- * 
- *
+Given an absolute path for a file (Unix-style), simplify it. 
+Or in other words, convert it to the canonical path.
+
+In a UNIX-style file system, a period . refers to the current directory. 
+Furthermore, a double period .. moves the directory up a level. 
+For more information, see: Absolute path vs relative path in Linux/Unix
+
+Note that the returned canonical path must always begin with a slash /, 
+and there must be only a single slash / between two directory names. 
+The last directory name (if it exists) must not end with a trailing /. 
+Also, the canonical path must be the shortest string representing the absolute path.
+
+
+Example 1:
+Input: "/home/"
+Output: "/home"
+Explanation: Note that there is no trailing slash after the last directory name.
+
+Example 2:
+Input: "/../"
+Output: "/"
+Explanation: Going one level up from the root directory is a no-op, 
+				as the root level is the highest level you can go.
+				
+Example 3:
+Input: "/home//foo/"
+Output: "/home/foo"
+Explanation: In the canonical path, multiple consecutive slashes are replaced by a single one.
+
+Example 4:
+Input: "/a/./b/../../c/"
+Output: "/c"
+
+Example 5:
+Input: "/a/../../b/../c//.//"
+Output: "/c"
+
+Example 6:
+Input: "/a//b////c/d//././/.."
+Output: "/a/b/c"
  */
 public class SimplifyPath {
     public String simplifyPath(String path) {
-        String[] dirs = path.split("/");
+        String[] names = path.split("/");
         Stack<String> stk = new Stack<>();
-        for (String s:dirs) {
-            if (s.equals("") || s.equals(".")) {
+        for (String s:names) {
+            if (s.equals(".") || s.equals("")) {
                 continue;
-            } else if (s.equals("..")) {
+            }
+            if (s.equals("..")) {
                 if (!stk.isEmpty()) {
                     stk.pop();
                 }
@@ -36,12 +60,12 @@ public class SimplifyPath {
                 stk.push(s);
             }
         }
-        StringBuilder sb = new StringBuilder();
-        for (String s:stk) {
-            sb.append("/").append(s);
-        }
-        if (sb.length()==0) {
+        if (stk.isEmpty()) {
             return "/";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (String each:stk) {
+            sb.append("/"+each);
         }
         return sb.toString();
     }
