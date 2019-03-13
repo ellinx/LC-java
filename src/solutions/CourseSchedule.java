@@ -1,75 +1,76 @@
 package solutions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 
 /**
- * There are a total of n courses you have to take, labeled from 0 to n - 1.
- * 
- * Some courses may have prerequisites, for example to take course 0 you have to first take course 1, which is expressed as a pair: [0,1]
- * 
- * Given the total number of courses and a list of prerequisite pairs, is it possible for you to finish all courses?
- * 
- * Example
- * Given n = 2, prerequisites = [[1,0]]
- * Return true
- * 
- * Given n = 2, prerequisites = [[1,0],[0,1]]
- * Return false
- * @author Ellinx
- *
+There are a total of n courses you have to take, labeled from 0 to n-1.
+
+Some courses may have prerequisites, for example to take course 0 you have to first take course 1, 
+which is expressed as a pair: [0,1]
+
+Given the total number of courses and a list of prerequisite pairs, 
+is it possible for you to finish all courses?
+
+Example 1:
+Input: 2, [[1,0]] 
+Output: true
+Explanation: There are a total of 2 courses to take. 
+             To take course 1 you should have finished course 0. So it is possible.
+             
+Example 2:
+Input: 2, [[1,0],[0,1]]
+Output: false
+Explanation: There are a total of 2 courses to take. 
+             To take course 1 you should have finished course 0, and to take course 0 you should
+             also have finished course 1. So it is impossible.
+             
+Note:
+1. The input prerequisites is a graph represented by a list of edges, 
+	not adjacency matrices. Read more about how a graph is represented.
+2. You may assume that there are no duplicate edges in the input prerequisites.
  */
 
 public class CourseSchedule {
-	public boolean canFinish(int numCourses, int[][] prerequisites) {
-        // Write your code here
-        List<Set<Integer>> graph = new ArrayList<Set<Integer>>(numCourses);
-        List<Integer> indegree = new ArrayList<Integer>(numCourses);
-        for (int i=0;i<numCourses;i++) {
-            graph.add(new HashSet<Integer>());
-            indegree.add(0);
-        }
-        
-        for (int i=0;i<prerequisites.length;i++) {
-            int from = prerequisites[i][1];
-            int to = prerequisites[i][0];
-            
-            Set<Integer> tmp = graph.get(from);
-            if (!tmp.contains(to)) {
-                tmp.add(to);
-                indegree.set(to,indegree.get(to)+1);
-                graph.set(from, tmp);
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        int[] indegree = new int[numCourses];
+        Map<Integer, Set<Integer>> map = new HashMap<>();
+        for (int[] each:prerequisites) {
+            if (!map.containsKey(each[1])) {
+                map.put(each[1], new HashSet<Integer>());
             }
-            
+            if (map.get(each[1]).contains(each[0])) {
+                continue;
+            }
+            map.get(each[1]).add(each[0]);
+            indegree[each[0]]++;
         }
-        
-        Set<Integer> toVisit = new HashSet<Integer>();
+        Queue<Integer> q = new LinkedList<>();
         for (int i=0;i<numCourses;i++) {
-            if (indegree.get(i)==0) {
-                toVisit.add(i);
+            if (indegree[i]==0) {
+                q.offer(i);
             }
         }
-        
-        while (toVisit.size()!=0) {
-            Iterator<Integer> toIter = toVisit.iterator();
-            int node = toIter.next();
-            toIter.remove();
-            Iterator<Integer> iter=graph.get(node).iterator();
-            while (iter.hasNext()) {
-                int m = iter.next();
-                iter.remove();
-                indegree.set(m, indegree.get(m)-1);
-                if (indegree.get(m)==0) {
-                    toVisit.add(m);
+        List<Integer> order = new ArrayList<>();
+        while (!q.isEmpty()) {
+            int cur = q.poll();
+            order.add(cur);
+            if (!map.containsKey(cur)) {
+                continue;
+            }
+            for (int next:map.get(cur)) {
+                indegree[next]--;
+                if (indegree[next]==0) {
+                    q.add(next);
                 }
             }
         }
-        for (int i=0;i<numCourses;i++) {
-            if (graph.get(i).size()!=0) return false;
-        }
-        return true;
+        return order.size()==numCourses;
     }
 }
