@@ -1,5 +1,7 @@
 package solutions;
 
+import java.util.Stack;
+
 /**
  * Given a non-negative integer num represented as a string, remove k digits
  * from the number so that the new number is the smallest possible.
@@ -29,7 +31,36 @@ package solutions;
  *
  */
 public class RemoveKDigits {
-	public String removeKdigits(String num, int k) {
+    public String removeKdigits(String num, int k) {
+        Stack<Integer> stk = new Stack<>();
+        for (char c:num.toCharArray()) {
+            int digit = c-'0';
+            while (!stk.isEmpty() && stk.peek()>digit && k>0) {
+                stk.pop();
+                k--;
+            }
+            stk.push(digit);
+            if (stk.size()==1 && stk.peek()==0) {
+                stk.pop();
+            }
+        }
+        // System.out.println(stk);
+        StringBuilder sb = new StringBuilder();
+        while (!stk.isEmpty()) {
+            if (k>0) {
+                k--;
+                stk.pop();
+                continue;
+            }
+            sb.append(Integer.toString(stk.pop()));
+        }
+        if (sb.length()==0) {
+            return "0";
+        }
+        return sb.reverse().toString();
+    }
+    
+	public String removeKdigits2(String num, int k) {
         if (k==0) return num;
         if (num.length() <= k) return "0";
         
