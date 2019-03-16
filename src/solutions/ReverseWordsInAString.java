@@ -3,49 +3,60 @@ package solutions;
 import java.util.Stack;
 
 /**
- * 
- * Given an input string, reverse the string word by word.
- * 
- * Example:
- * 
- * Input: "the sky is blue", 
- * Output: "blue is sky the".
- * 
- * Note:
- * 
- * 1. A word is defined as a sequence of non-space characters. 
- * 2. Input string may contain leading or trailing spaces. 
- * 		However, your reversed string should not contain leading or trailing spaces. 
- * 3. You need to reduce multiple spaces between two words to a single space in the reversed string.
- * 
- * @author Ellinx
- *
+Given an input string, reverse the string word by word.
+
+
+Example 1:
+Input: "the sky is blue"
+Output: "blue is sky the"
+
+Example 2:
+Input: "  hello world!  "
+Output: "world! hello"
+Explanation: Your reversed string should not contain leading or trailing spaces.
+
+Example 3:
+Input: "a good   example"
+Output: "example good a"
+Explanation: You need to reduce multiple spaces between two words to a single space 
+				in the reversed string.
+ 
+
+Note:
+1. A word is defined as a sequence of non-space characters.
+2. Input string may contain leading or trailing spaces. 
+	However, your reversed string should not contain leading or trailing spaces.
+3. You need to reduce multiple spaces between two words to a single space in the reversed string.
+ 
+
+Follow up:
+For C programmers, try to solve it in-place in O(1) extra space.
  */
 public class ReverseWordsInAString {
     public String reverseWords(String s) {
         Stack<String> stk = new Stack<>();
-        int index = 0;
-        while (index<s.length()) {
-            while (index<s.length() && s.charAt(index)==' ') {
-                index++;
+        int l=0, r=0;
+        while (l<s.length()) {
+            while (l<s.length() && s.charAt(l)==' ') {
+                l++;
             }
-            if (index==s.length()) {
+            if (l==s.length()) {
                 break;
             }
-            int end = index+1;
-            while (end<s.length() && s.charAt(end)!=' ') {
-                end++;
+            r = l+1;
+            while (r<s.length() && s.charAt(r)!=' ') {
+                r++;
             }
-            stk.push(s.substring(index,end));
-            index = end+1;
+            stk.push(s.substring(l,r));
+            l = r;
         }
         StringBuilder sb = new StringBuilder();
         while (!stk.isEmpty()) {
-            sb.append(stk.pop()).append(' ');
+            if (sb.length()>0) {
+                sb.append(" ");
+            }
+            sb.append(stk.pop());
         }
-        if (sb.length()==0) {
-            return "";
-        }
-        return sb.substring(0,sb.length()-1);
+        return sb.toString();
     }
 }
