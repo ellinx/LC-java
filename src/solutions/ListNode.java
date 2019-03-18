@@ -18,5 +18,14 @@ public class ListNode {
 		return sb.toString();
 	}
 	
+	public static ListNode constructFromArray(int[] nums) {
+		ListNode dummy = new ListNode(0);
+		ListNode cur = dummy;
+		for (int num:nums) {
+			cur.next = new ListNode(num);
+			cur = cur.next;
+		}
+		return dummy.next;
+	}
 	
 }
