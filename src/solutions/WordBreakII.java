@@ -1,11 +1,10 @@
 package solutions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
 Given a non-empty string s and a dictionary wordDict containing a list of non-empty words, 
@@ -48,35 +47,31 @@ Output:
  */
 
 public class WordBreakII {
-	public List<String> wordBreakII(String s, List<String> wordDict) {
-		Set<String> set = new HashSet<>();
-        for (String str:wordDict) {
-            set.add(str);
-        }
-        return DFS(s,set,new HashMap<String, List<String>>());
+    public List<String> wordBreak(String s, List<String> wordDict) {
+        Map<Integer, List<String>> mm = new HashMap<>();
+        return dfs(s, 0, wordDict, mm);
     }
-	private List<String> DFS(String s, Set<String> set, Map<String, List<String>> map) {
-        if (map.containsKey(s))
-            return map.get(s);
-        
-        List<String> res = new LinkedList<>();
-        for (int i=1;i<=s.length();i++) {
-            String left = s.substring(0,i);
-            if (set.contains(left)) {
-                if (i<s.length()) {
-                    List<String> right = DFS(s.substring(i), set, map);
-                    if (!right.isEmpty()) {
-                        for (String str:right) {
-                            res.add(left+" "+str);
-                        }
+    private List<String> dfs(String s, int start, List<String> wordDict, Map<Integer, List<String>> mm) {
+        if (s.length()==start) {
+            return Arrays.asList("");
+        }
+        if (mm.containsKey(start)) {
+            return mm.get(start);
+        }
+        List<String> ret = new ArrayList<>();
+        for (String word:wordDict) {
+            int n = word.length();
+            if (start+n<=s.length() && s.substring(start,start+n).equals(word)) {
+                for (String each:dfs(s, start+n, wordDict, mm)) {
+                    if (each.length()==0) {
+                        ret.add(word);
+                    } else {
+                        ret.add(word+" "+each);
                     }
-                } else {
-                    res.add(left);
                 }
             }
         }
-        
-        map.put(s, res);
-        return res;
+        mm.put(start, ret);
+        return ret;
     }
 }
