@@ -63,6 +63,25 @@ public class LetterCombinationsOfPhoneNumber {
         return res;
     }
 	
+	//DFS
+    public List<String> letterCombinations2(String digits) {
+        String[] map = {"","","abc","def","ghi","jkl","mno","pqrs","tuv","wxyz"};
+        List<String> ret = new ArrayList<>();
+        dfs(digits.toCharArray(), 0, "", map, ret);
+        return ret;
+    }
+    private void dfs(char[] digits, int start, String cur, String[] map, List<String> ret) {
+        if (start==digits.length) {
+            if (cur.length()>0) {
+                ret.add(cur);
+            }
+            return;
+        }
+        for (char c: map[digits[start]-'0'].toCharArray()) {
+            dfs(digits, start+1, cur+c, map, ret);
+        }
+    }
+	
 	//test
 	public static void main(String[] args) {
 		LetterCombinationsOfPhoneNumber lcpn = new LetterCombinationsOfPhoneNumber();
