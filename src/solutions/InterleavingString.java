@@ -4,23 +4,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Given s1, s2, s3, find whether s3 is formed by the interleaving of s1 and s2.
- * 
- * For example, 
- * Given: 
- * s1 = "aabcc", 
- * s2 = "dbbca",
- * 
- * When s3 = "aadbbcbcac", return true. 
- * When s3 = "aadbbbaccc", return false.
- *
+Given s1, s2, s3, find whether s3 is formed by the interleaving of s1 and s2.
+
+Example 1:
+Input: s1 = "aabcc", s2 = "dbbca", s3 = "aadbbcbcac"
+Output: true
+
+Example 2:
+Input: s1 = "aabcc", s2 = "dbbca", s3 = "aadbbbaccc"
+Output: false
  */
 public class InterleavingString {
-	/**
-	 * Thoughts:
-	 * 1. dynamic programming
-	 * 
-	 */
+
+	 // Thoughts:
+	 // 1. dynamic programming
 	public boolean isInterleave(String s1, String s2, String s3) {
 		if (s1.length() + s2.length() != s3.length())
 			return false;
@@ -47,43 +44,41 @@ public class InterleavingString {
 		return dp[s1.length()][s2.length()];
 	}
 	
-	/**
-	 * Thoughts:
-	 * 1. DFS
-	 */
-    private Map<String,Boolean> map = new HashMap<>();
-    public boolean isInterleaveDFS(String s1, String s2, String s3) {
-        //System.out.println(s1+","+s2+","+s3);
-        if (s1.length()+s2.length()!=s3.length()) {
+
+	// Thoughts:
+	// 1. DFS
+    public boolean isInterleave2(String s1, String s2, String s3) {
+        return isInterleave(s1, 0, s2, 0, s3, 0, new HashMap<String,Boolean>());
+    }
+    private boolean isInterleave(String s1, int i1, String s2, int i2, String s3, int i3, Map<String, Boolean> mm) {
+        String key = i1+","+i2+","+i3;
+        if (mm.containsKey(key)) {
+            return mm.get(key);
+        }
+        int l1 = s1.length();
+        int l2 = s2.length();
+        int l3 = s3.length();
+        if (l1-i1+l2-i2!=l3-i3) {
+            mm.put(key, false);
             return false;
         }
-        if (s3.length()==0) {
+        if (i1==l1 && i2==l2 && i3==l3) {
+            mm.put(key, true);
             return true;
         }
-        if (s1.length()==0) {
-            return s2.equals(s3);
-        }
-        if (map.containsKey(s1+","+s2+","+s3)) {
-            return map.get(s1+","+s2+","+s3);
-        }
-        for (int i=0;i<s3.length();i++) {
-            if (s1.charAt(0)==s3.charAt(i)) {
-                if (i==0) {
-                    if (isInterleave(s1.substring(1),s2,s3.substring(1))) {
-                        map.put(s1+","+s2+","+s3, true);
-                        return true;
-                    }
-                } else {
-                    if (s2.length()>=i && s2.substring(0,i).equals(s3.substring(0,i))) {
-                        if (isInterleave(s1.substring(1),s2.substring(i),s3.substring(i+1))) {
-                            map.put(s1+","+s2+","+s3, true);
-                            return true;
-                        }
-                    }
-                }
+        if (i1<l1 && s1.charAt(i1)==s3.charAt(i3)) {
+            if (isInterleave(s1,i1+1,s2,i2,s3,i3+1,mm)) {
+                mm.put(key, true);
+                return true;
             }
         }
-        map.put(s1+","+s2+","+s3, false);
+        if (i2<l2 && s2.charAt(i2)==s3.charAt(i3)) {
+            if (isInterleave(s1,i1,s2,i2+1,s3,i3+1,mm)) {
+                mm.put(key, true);
+                return true;
+            }
+        }
+        mm.put(key, false);
         return false;
     }
 	
