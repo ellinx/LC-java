@@ -3,53 +3,66 @@ package solutions;
 import java.util.Stack;
 
 /**
- * Given a binary tree where all the right nodes are either leaf nodes with a sibling 
- * (a left node that shares the same parent node) or empty, flip it upside down and 
- * turn it into a tree where the original right nodes turned into left leaf nodes. 
- * Return the new root.
- * 
- * Example:
- * 
- * Input: [1,2,3,4,5]
- * 
- *     1
- *    / \
- *   2   3
- *  / \
- * 4   5
- * 
- * Output: return the root of the binary tree [4,5,2,#,#,3,1]
- * 
- *    4
- *   / \
- *  5   2
- *     / \
- *    3   1  
- * 
- * 
- * @author Ellinx
- *
+Given a binary tree where all the right nodes are either leaf nodes with a sibling 
+(a left node that shares the same parent node) or empty, flip it upside down and 
+turn it into a tree where the original right nodes turned into left leaf nodes. 
+Return the new root.
+
+Example:
+
+Input: [1,2,3,4,5]
+
+    1
+   / \
+  2   3
+ / \
+4   5
+
+Output: return the root of the binary tree [4,5,2,#,#,3,1]
+
+   4
+  / \
+ 5   2
+    / \
+   3   1  
+Clarification:
+
+Confused what [4,5,2,#,#,3,1] means? 
+Read more below on how binary tree is serialized on OJ.
+
+The serialization of a binary tree follows a level order traversal, 
+where '#' signifies a path terminator where no node exists below.
+
+Here's an example:
+
+   1
+  / \
+ 2   3
+    /
+   4
+    \
+     5
+The above binary tree is serialized as [1,2,3,#,#,4,#,#,5].
  */
 public class BinaryTreeUpsideDown {
-	public TreeNode upsideDownBinaryTree(TreeNode root) {
-        if (root==null)
+    public TreeNode upsideDownBinaryTree(TreeNode root) {
+        if (root==null) {
             return null;
-        Stack<TreeNode> stack = new Stack<>();
+        }
         TreeNode cur = root;
-        while (cur!=null) {
-            stack.push(cur);
-            cur = cur.left;
-        }
-        TreeNode newRoot = stack.pop();
-        cur = newRoot;
-        while (!stack.isEmpty()) {
-            TreeNode next = stack.pop();
-            cur.left = next.right;
-            cur.right = next;
-            cur = next;
-        }
+        TreeNode left = root.left;
+        TreeNode right = root.right;
         cur.left = null;
         cur.right = null;
-        return newRoot;
+        while (left!=null) {
+            TreeNode nextLeft = left.left;
+            TreeNode nextRight = left.right;
+            left.left = right;
+            left.right = cur;
+            cur = left;
+            left = nextLeft;
+            right = nextRight;
+        }
+        return cur;
     }
 }
