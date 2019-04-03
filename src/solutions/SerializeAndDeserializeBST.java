@@ -1,23 +1,21 @@
 package solutions;
 
 /**
- * Serialization is the process of converting a data structure or object into a
- * sequence of bits so that it can be stored in a file or memory buffer, or
- * transmitted across a network connection link to be reconstructed later in the
- * same or another computer environment.
- * 
- * Design an algorithm to serialize and deserialize a binary search tree. There
- * is no restriction on how your serialization/deserialization algorithm should
- * work. You just need to ensure that a binary search tree can be serialized to
- * a string and this string can be deserialized to the original tree structure.
- * 
- * The encoded string should be as compact as possible.
- * 
- * Note: Do not use class member/global/static variables to store states. Your
- * serialize and deserialize algorithms should be stateless.
- * 
- * @author Ellinx
- *
+Serialization is the process of converting a data structure or object into a sequence of bits 
+so that it can be stored in a file or memory buffer, 
+or transmitted across a network connection link to be reconstructed later in the same 
+or another computer environment.
+
+Design an algorithm to serialize and deserialize a binary search tree. 
+There is no restriction on how your serialization/deserialization algorithm should work. 
+You just need to ensure that a binary search tree can be serialized to a string and 
+this string can be deserialized to the original tree structure.
+
+The encoded string should be as compact as possible.
+
+Note: 
+1. Do not use class member/global/static variables to store states. 
+2. Your serialize and deserialize algorithms should be stateless.
  */
 
 /**
@@ -30,79 +28,62 @@ package solutions;
  * }
  */
 public class SerializeAndDeserializeBST {
-	// Encodes a tree to a single string.
+
+    // Encodes a tree to a single string.
     public String serialize(TreeNode root) {
-        if (root == null) return "";
-        
-        StringBuilder sb = new StringBuilder();
-        sb.append(root.val);
-        if (root.left != null) {
-        	sb.append(',');
-        	sb.append(serialize(root.left));
+        if (root==null) {
+            return "";
         }
-        if (root.right != null) {
-        	sb.append(',');
-        	sb.append(serialize(root.right));
+        String ret = Integer.toString(root.val);
+        String left = serialize(root.left);
+        if (left.length()>0) {
+            ret += ","+left;
         }
-        return sb.toString();
+        String right = serialize(root.right);
+        if (right.length()>0) {
+            ret += ","+right;
+        }
+        //System.out.println(ret);
+        return ret;
     }
 
     // Decodes your encoded data to tree.
     public TreeNode deserialize(String data) {
-        if (data.isEmpty()) return null;
-        
-        int start = 0;
-        int end = 0;
-        int leftStart = -1;
-        int rightStart = -1;
-        
-        while (end<data.length() && data.charAt(end)!=',') {
-        	end++;
+        if (data.length()==0) {
+            return null;
         }
-        TreeNode root = new TreeNode(Integer.parseInt(data.substring(0, end)));
-        if (end == data.length()) {
-        	//only one value
-        	return root;
-        } else {
-        	start = ++end;
+        int l=0;
+        while (l<data.length() && data.charAt(l)!=',') {
+            l++;
         }
-        
-        while (end < data.length()) {
-        	while (end < data.length() && data.charAt(end)!=',') {
-        		end++;
-        	}
-        	int cur = Integer.parseInt(data.substring(start,end));
-        	if (cur < root.val) {
-        		//left subtree node
-        		if (leftStart==-1)
-        			leftStart = start;
-        		
-        		start = ++end;
-        	} else {
-        		rightStart = start;
-        		break;
-        	}
+        TreeNode ret = new TreeNode(Integer.parseInt(data.substring(0,l)));
+        if (l==data.length()) {
+            return ret;
         }
-        
-        if (leftStart!=-1) {
-        	int leftEnd = (rightStart==-1)?data.length():rightStart-1;
-        	String leftStr = data.substring(leftStart,leftEnd);
-        	root.left = deserialize(leftStr);
+        int idx1 = l;
+        l++;
+        int r = l;
+        while (r<data.length()) {
+            while (r<data.length() && data.charAt(r)!=',') {
+                r++;
+            }
+            if (Integer.parseInt(data.substring(l,r))>ret.val) {
+                break;
+            }
+            r++;
+            l = r;
         }
-        if (rightStart!=-1) {
-        	String rightStr = data.substring(rightStart);
-        	root.left = deserialize(rightStr);
+        if (idx1+1<=l-1) {
+            ret.left = deserialize(data.substring(idx1+1,l-1));
         }
-        
-        return root;
+        if (l<data.length()) {
+            ret.right = deserialize(data.substring(l));
+        }
+        return ret;
     }
-    
-    //Your SerializeAndDeserializeBST object will be instantiated and called as such:
-    //SerializeAndDeserializeBST codec = new Codec();
-    //codec.deserialize(codec.serialize(root));
-    public static void main(String[] args) {
-    	SerializeAndDeserializeBST tmp = new SerializeAndDeserializeBST();
-	}
-    
 }
+
+// Your Codec object will be instantiated and called as such:
+// Codec codec = new Codec();
+// codec.deserialize(codec.serialize(root));
 
