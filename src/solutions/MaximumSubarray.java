@@ -1,39 +1,32 @@
 package solutions;
 
 /**
- * Find the contiguous subarray within an array (containing at least one number)
- * which has the largest sum.
- * 
- * For example, given the array [-2,1,-3,4,-1,2,1,-5,4], the contiguous subarray
- * [4,-1,2,1] has the largest sum = 6.
- * 
- * click to show more practice.
- * 
- * More practice: If you have figured out the O(n) solution, try coding another
- * solution using the divide and conquer approach, which is more subtle.
- * 
- * @author Ellinx
- *
+Given an integer array nums, find the contiguous subarray (containing at least one number) 
+which has the largest sum and return its sum.
+
+Example:
+Input: [-2,1,-3,4,-1,2,1,-5,4],
+Output: 6
+Explanation: [4,-1,2,1] has the largest sum = 6.
+
+Follow up:
+If you have figured out the O(n) solution, 
+try coding another solution using the divide and conquer approach, 
+which is more subtle.
  */
 public class MaximumSubarray {
-	public int maxSubArray(int[] nums) {
-		if (nums.length==1) {
-			return nums[0];
-		}
-		
-		//dp[i] stores maximum sum of subarray ending at i
-        int[] dp = new int[nums.length]; 
-        dp[0] = nums[0];
-        int res = dp[0];
+    public int maxSubArray(int[] nums) {
+        int ret = nums[0];
+        int cur = nums[0];
         for (int i=1;i<nums.length;i++) {
-        	if (dp[i-1]<0) {
-        		dp[i] = nums[i];
-        	} else {
-        		dp[i] = dp[i-1] + nums[i];
-        	}
-        	res = Math.max(res, dp[i]);
+            if (cur<0) {
+                cur = nums[i];
+            } else {
+                cur += nums[i];
+            }
+            ret = Math.max(ret, cur);
         }
-        return res;
+        return ret;
     }
 	
 	//test
