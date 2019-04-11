@@ -1,33 +1,26 @@
 package solutions;
 
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /**
- * 
- * Given a nested list of integers, implement an iterator to flatten it.
- * 
- * Each element is either an integer, or a list -- whose elements may also be
- * integers or other lists.
- * 
- * Example 1:
- * 
- * Input: [[1,1],2,[1,1]] 
- * Output: [1,1,2,1,1] 
- * Explanation: By calling next repeatedly until hasNext returns false, 
- * the order of elements returned by next should be: [1,1,2,1,1].
- * 
- * Example 2:
- * 
- * Input: [1,[4,[6]]] 
- * Output: [1,4,6] 
- * Explanation: By calling next repeatedly until hasNext returns false, 
- * the order of elements returned by next should be: [1,4,6].
- * 
- * 
- * @author Ellinx
- *
+Given a nested list of integers, implement an iterator to flatten it.
+
+Each element is either an integer, or a list -- whose elements may also be integers or other lists.
+
+Example 1:
+Input: [[1,1],2,[1,1]]
+Output: [1,1,2,1,1]
+Explanation: By calling next repeatedly until hasNext returns false, 
+             the order of elements returned by next should be: [1,1,2,1,1].
+             
+Example 2:
+Input: [1,[4,[6]]]
+Output: [1,4,6]
+Explanation: By calling next repeatedly until hasNext returns false, 
+             the order of elements returned by next should be: [1,4,6].
  */
 public class FlattenNestedListIterator {
 }
@@ -51,34 +44,43 @@ public class FlattenNestedListIterator {
  */
 
 class NestedIterator implements Iterator<Integer> {
-    List<Integer> list;
-    int index;
-
-    public NestedIterator(List<NestedInteger> nestedList) {
-        list = new ArrayList<>();
-        index = 0;
-        for (NestedInteger each:nestedList) {
-            dfs(each, list);
-        }
-    }
+    private Queue<Integer> q;
+    private List<NestedInteger> list;
+    private int idx;
     
-    private void dfs(NestedInteger n, List<Integer> list) {
-        if (n.isInteger()) {
-            list.add(n.getInteger());
-            return;
-        }
-        for (NestedInteger each:n.getList()) {
-            dfs(each, list);
-        }
+    public NestedIterator(List<NestedInteger> nestedList) {
+        q = new LinkedList<>();
+        list = nestedList;
+        idx = 0;
     }
 
     @Override
     public Integer next() {
-        return list.get(index++);
+        return q.poll();
     }
 
     @Override
     public boolean hasNext() {
-        return index<list.size();
+        while (q.isEmpty() && idx<list.size()) {
+            NestedInteger cur = list.get(idx);
+            idx++;
+            flatten(q, cur);
+        }
+        return !q.isEmpty();
     }
+    private void flatten(Queue<Integer> q, NestedInteger cur) {
+        if (cur.isInteger()) {
+            q.offer(cur.getInteger());
+            return;
+        }
+        for (NestedInteger each:cur.getList()) {
+            flatten(q, each);
+        }
+    }
+    
+    /**
+     * Your NestedIterator object will be instantiated and called as such:
+     * NestedIterator i = new NestedIterator(nestedList);
+     * while (i.hasNext()) v[f()] = i.next();
+     */
 }
