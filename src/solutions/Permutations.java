@@ -1,52 +1,51 @@
 package solutions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
- * Given a collection of distinct numbers, return all possible permutations.
- * 
- * For example, [1,2,3] have the following permutations: 
- * [ [1,2,3], 
- *   [1,3,2],
- * 	 [2,1,3], 
- *   [2,3,1],
- *   [3,1,2],
- *   [3,2,1] ]
- * 
- * @author Ellinx
- *
+Given a collection of distinct integers, return all possible permutations.
+
+Example:
+
+Input: [1,2,3]
+Output:
+[
+  [1,2,3],
+  [1,3,2],
+  [2,1,3],
+  [2,3,1],
+  [3,1,2],
+  [3,2,1]
+]
  */
 public class Permutations {
-	public List<List<Integer>> permute(int[] nums) {
-		if (nums.length==0) return new ArrayList<List<Integer>>();
-        List<List<Integer>> res = help(nums, nums.length-1);
-        return res;
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> ret = new ArrayList<>();
+        boolean[] used = new boolean[nums.length];
+        for (int i=0;i<nums.length;i++) {
+            used[i] = true;
+            dfs(nums, used, Arrays.asList(nums[i]), ret);
+            used[i] = false;
+        }
+        return ret;
     }
-	
-	private List<List<Integer>> help(int[] nums, int end) {
-		List<List<Integer>> res = new ArrayList<>();
-		List<Integer> can = new ArrayList<>();
-		if (0 == end) {
-			can.add(nums[0]);
-			res.add(can);
-			return res;
-		}
-		
-		for (int i=0;i<=end;i++) {
-			int cur = nums[i];
-			nums[i] = nums[end];
-			nums[end] = cur;
-			List<List<Integer>> tmp = help(nums, end-1);
-			for (List<Integer> each : tmp) {
-				each.add(cur);
-				res.add(each);
-			}
-			nums[end] = nums[i];
-			nums[i] = cur;
-		}
-		return res;
-	}
+    private void dfs(int[] nums, boolean[] used, List<Integer> list, List<List<Integer>> ret) {
+        if (list.size()==nums.length) {
+            ret.add(list);
+            return;
+        }
+        for (int i=0;i<nums.length;i++) {
+            if (!used[i]) {
+                used[i] = true;
+                List<Integer> next = new ArrayList<>(list);
+                next.add(nums[i]);
+                dfs(nums, used, next, ret);
+                used[i] = false;
+            }
+        }
+    }
 	
 	//test
 	public static void main(String[] args) {
