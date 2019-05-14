@@ -1,10 +1,18 @@
 package solutions;
 
 /**
- * Given an array of size n, find the majority element. The majority element is the element that appears more than ⌊ n/2 ⌋ times.
- * You may assume that the array is non-empty and the majority element always exist in the array.
- * @author Ellinx
- *
+ Given an array of size n, find the majority element.
+ The majority element is the element that appears more than ⌊ n/2 ⌋ times.
+
+ You may assume that the array is non-empty and the majority element always exist in the array.
+
+ Example 1:
+ Input: [3,2,3]
+ Output: 3
+
+ Example 2:
+ Input: [2,2,1,1,1,2,2]
+ Output: 2
  */
 public class MajorityElement {
 	/**
@@ -18,21 +26,21 @@ public class MajorityElement {
 	 * Time: O(n) where n is length of array
 	 * Space: O(1)
 	 */
-	public int majorityElementI(int[] nums) {
-        int n = nums.length;
-        int can = 0, count = 0;
-        for (int i=0;i<n;i++) {
-        	if (can==nums[i]) {
-        		count++;
-        	} else if (count==0) {
-        		can = nums[i];
-        		count = 1;
-        	} else {
-        		count--;
-        	}
-        }
-        
-        //no need to verify, as assume it always exists.
-        return can;
-    }
+	public int majorityElement(int[] nums) {
+		int cand = nums[0];
+		int count = 1;
+		for (int i=1;i<nums.length;i++) {
+			if (cand==nums[i]) {
+				count++;
+				continue;
+			}
+			if (count==0) {
+				cand = nums[i];
+				count++;
+				continue;
+			}
+			count--;
+		}
+		return cand;
+	}
 }
