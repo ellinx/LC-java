@@ -30,7 +30,7 @@
  1 unit to the 2nd stone, then 2 units to the 3rd stone, then
  2 units to the 4th stone, then 3 units to the 6th stone,
  4 units to the 7th stone, and 5 units to the 8th stone.
- 
+
  Example 2:
 
  [0,1,2,3,4,8,9,11]
