@@ -38,31 +38,32 @@ Output: 0
 
 Explanation: You don't need to remove any of the intervals since they're already non-overlapping.
 
-NOTE: input types have been changed on April 15, 2019. 
-Please reset to default code definition to get new method signature.
+
+Note:
+	1. You may assume the interval's end point is always bigger than its start point.
+    2. Intervals like [1,2] and [2,3] have borders "touching" but they don't overlap each other.
+
  */
 
 public class NonoverlappingIntervals {
     public int eraseOverlapIntervals(int[][] intervals) {
-        Arrays.sort(intervals, new Comparator<int[]>(){
-            public int compare(int[] a, int[] b) {
-                if (a[1]!=b[1]) {
-                    return a[1]-b[1];
-                }
-                return b[0]-a[0];
-            }
-        });
-        if (intervals.length==0) {
+        if (intervals.length == 0) {
             return 0;
         }
-        int[] cur = intervals[0];
-        int ret = 0;
-        for (int i=1;i<intervals.length;i++) {
-            if (intervals[i][0]<cur[1]) {
-                ret++;
-                continue;
+        Arrays.sort(intervals, (a,b)->{
+            if (a[1] == b[1]) {
+                return b[0]-a[0];
             }
-            cur = intervals[i];
+            return a[1]-b[1];
+        });
+        int ret = 0;
+        int[] cur = intervals[0];
+        for (int i=1;i<intervals.length;i++) {
+            if (cur[1] > intervals[i][0]) {
+                ret++;
+            } else {
+                cur = intervals[i];
+            }
         }
         return ret;
     }

@@ -1,5 +1,7 @@
 package solutions;
 
+import java.util.Arrays;
+
 /**
 Say you have an array for which the ith element is the price of a given stock on day i.
 
@@ -29,25 +31,32 @@ Explanation: In this case, no transaction is done, i.e. max profit = 0.
 
 public class BestTimeToBuyAndSellStockIII {
     public int maxProfit(int[] prices) {
-        int ret = 0;
-        if (prices.length==0) {
-            return ret;
+        if (prices.length == 0) {
+            return 0;
         }
-        int[] hold = {-prices[0],-prices[0]};
-        int[] noHold = {0,0,0};
+        //        buy/sell
+        //   0  <==========>  1
+        int[][] dp = new int[2][3];
+        dp[1][1] = -prices[0];
+        dp[1][0] = -prices[0];
         for (int i=1;i<prices.length;i++) {
-            int[] n_hold = {0,0};
-            int[] n_noHold = {0,0,0};
-            n_hold[1] = Math.max(hold[1], noHold[2]-prices[i]);
-            n_hold[0] = Math.max(hold[0], noHold[1]-prices[i]);
-            n_noHold[2] = noHold[2];
-            n_noHold[1] = Math.max(noHold[1], hold[1]+prices[i]);
-            n_noHold[0] = Math.max(noHold[0], hold[0]+prices[i]);
-            ret = Math.max(ret, n_noHold[1]);
-            ret = Math.max(ret, n_noHold[0]);
-            hold = n_hold;
-            noHold = n_noHold;
+            int[][] ndp = new int[2][3];
+            for (int j=0;j<2;j++) {
+                ndp[j] = Arrays.copyOf(dp[j], dp[j].length);
+            }
+            dp[1][1] = Math.max(ndp[1][1], ndp[0][2] - prices[i]);
+            dp[1][0] = Math.max(ndp[1][0], ndp[0][1] - prices[i]);
+            dp[0][1] = Math.max(ndp[0][1], ndp[1][1] + prices[i]);
+            dp[0][0] = Math.max(ndp[0][0], ndp[1][0] + prices[i]);
         }
-        return ret;
+        return Math.max(Math.max(dp[0][0], dp[0][1]), dp[0][2]);
     }
+    
+	//test
+	public static void main(String[] args) {
+		BestTimeToBuyAndSellStockIII tmp = new BestTimeToBuyAndSellStockIII();
+		int[] prices = {3,3,5,0,0,3,1,4};
+		int result = tmp.maxProfit(prices);
+		System.out.println(result);
+	}
 }
